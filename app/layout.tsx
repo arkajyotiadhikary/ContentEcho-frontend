@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Carter_One } from "next/font/google";
 import "./globals.css";
 
-import { Provider } from "./providers/ChakraProvider";
+import { Provider } from "@/providers/ChakraProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const carter = Carter_One({ weight: ["400"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
       title: "Create Next App",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
       return (
             <html lang="en">
-                  <body className={inter.className}>
+                  <body className={carter.className}>
                         <Provider>{children}</Provider>
                   </body>
             </html>
