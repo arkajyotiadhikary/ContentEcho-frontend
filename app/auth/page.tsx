@@ -16,9 +16,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect, use } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import { registerUser, authenticateUser } from "@/tools/api";
+import cookie from "cookie";
 
+// todo move this to another component
+// password input with show/hide
 function PasswordInput({ id, user, setUser }: { id: string; user: any; setUser: any }) {
       const [show, setShow] = useState(false);
       const handleClick = () => setShow(!show);
@@ -46,8 +48,8 @@ const Auth = () => {
       const searchParams = useSearchParams();
       const [isSignIn, setIsSignIn] = useState(true);
       const [user, setUser] = useState({ username: "", email: "", password: "" });
-
       const toast = useToast();
+      const router = useRouter();
 
       useEffect(() => {
             const isSignInParam = searchParams.get("isSignIn");
@@ -56,6 +58,7 @@ const Auth = () => {
             }
       }, [searchParams]);
 
+      // toggle form between sign in and sign up
       const toggleAuthMode = () => setIsSignIn(!isSignIn);
 
       const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,12 +75,21 @@ const Auth = () => {
             console.log(response);
 
             if (response?.status === 200) {
+                  if (isSignIn) {
+                        document.cookie = cookie.serialize("token", response.data.jwt, {
+                              httpOnly: true,
+                              maxAge: 60 * 60 * 24 * 7, // 1 week
+                              sameSite: "strict",
+                              path: "/",
+                        });
+                  }
                   toast({
                         title: isSignIn ? "Sign In Successful" : "Sign Up Successful",
                         status: "success",
                         duration: 5000,
                         isClosable: true,
                   });
+                  router.push("/articles");
             } else {
                   toast({
                         title: isSignIn ? "Sign In Failed" : "Sign Up Failed",
