@@ -1,4 +1,5 @@
 "use client";
+
 import {
       Box,
       Button,
@@ -13,9 +14,12 @@ import {
       InputRightElement,
       useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect, use } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-function PasswordInput() {
+import { registerUser, authenticateUser } from "@/tools/api";
+
+function PasswordInput({ id, user, setUser }: { id: string; user: any; setUser: any }) {
       const [show, setShow] = useState(false);
       const handleClick = () => setShow(!show);
 
@@ -25,7 +29,9 @@ function PasswordInput() {
                         pr="4.5rem"
                         type={show ? "text" : "password"}
                         placeholder="Enter password"
+                        id={id}
                         required
+                        onChange={(e) => setUser({ ...user, password: e.target.value })}
                   />
                   <InputRightElement width="4.5rem">
                         <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -37,18 +43,49 @@ function PasswordInput() {
 }
 
 const Auth = () => {
+      const searchParams = useSearchParams();
       const [isSignIn, setIsSignIn] = useState(true);
-      const toggleAuthMode = () => setIsSignIn(!isSignIn);
+      const [user, setUser] = useState({ username: "", email: "", password: "" });
+
       const toast = useToast();
 
-      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      useEffect(() => {
+            const isSignInParam = searchParams.get("isSignIn");
+            if (isSignInParam !== null) {
+                  setIsSignIn(isSignInParam === "true");
+            }
+      }, [searchParams]);
+
+      const toggleAuthMode = () => setIsSignIn(!isSignIn);
+
+      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
-            toast({
-                  title: isSignIn ? "Sign In Successful" : "Sign Up Successful",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-            });
+
+            const response = isSignIn
+                  ? await authenticateUser({ identifier: user.email, password: user.password })
+                  : await registerUser({
+                          username: user.username,
+                          email: user.email,
+                          password: user.password,
+                    });
+
+            console.log(response);
+
+            if (response?.status === 200) {
+                  toast({
+                        title: isSignIn ? "Sign In Successful" : "Sign Up Successful",
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                  });
+            } else {
+                  toast({
+                        title: isSignIn ? "Sign In Failed" : "Sign Up Failed",
+                        status: "error",
+                        duration: 5000,
+                        isClosable: true,
+                  });
+            }
       };
 
       return (
@@ -60,29 +97,54 @@ const Auth = () => {
                   bg="gray.100"
             >
                   <Box width="full" maxW="md" p={8} borderRadius="xl" boxShadow="md" bg="white">
-                        <Heading as="h2" size="xl" textAlign="center" mb={6}>
-                              {isSignIn ? "Sign In" : "Sign Up"}
-                        </Heading>
+                        <h1 className="text-2xl text-center">{isSignIn ? "Sign In" : "Sign Up"}</h1>
                         <form onSubmit={handleSubmit}>
                               <VStack spacing={4}>
                                     {!isSignIn && (
                                           <FormControl>
-                                                <FormLabel>Username</FormLabel>
-                                                <Input type="text" id="username" required />
+                                                <FormLabel htmlFor="username">Username</FormLabel>
+                                                <Input
+                                                      type="text"
+                                                      id="username"
+                                                      required
+                                                      onChange={(e) =>
+                                                            setUser({
+                                                                  ...user,
+                                                                  username: e.target.value,
+                                                            })
+                                                      }
+                                                />
                                           </FormControl>
                                     )}
                                     <FormControl>
-                                          <FormLabel>Email address</FormLabel>
-                                          <Input type="email" required />
+                                          <FormLabel htmlFor="email">Email address</FormLabel>
+                                          <Input
+                                                type="email"
+                                                id="email"
+                                                required
+                                                onChange={(e) =>
+                                                      setUser({ ...user, email: e.target.value })
+                                                }
+                                          />
                                           <FormHelperText>
                                                 We will never share your email.
                                           </FormHelperText>
                                     </FormControl>
                                     <FormControl>
-                                          <FormLabel>Password</FormLabel>
-                                          <PasswordInput />
+                                          <FormLabel htmlFor="password">Password</FormLabel>
+                                          <PasswordInput
+                                                id="password"
+                                                user={user}
+                                                setUser={setUser}
+                                          />
                                     </FormControl>
-                                    <Button type="submit" width="full" colorScheme="blue">
+                                    <Button
+                                          type="submit"
+                                          width="full"
+                                          bgColor={"#213951"}
+                                          color={"white"}
+                                          _hover={{ bg: "#f6828c" }}
+                                    >
                                           {isSignIn ? "Sign In" : "Sign Up"}
                                     </Button>
                               </VStack>
@@ -93,9 +155,10 @@ const Auth = () => {
                                           ? "Don't have an account?"
                                           : "Already have an account?"}{" "}
                                     <Button
+                                          color={"#213951"}
                                           variant="link"
-                                          colorScheme="blue"
                                           onClick={toggleAuthMode}
+                                          _hover={{ color: "#f6828c" }}
                                     >
                                           {isSignIn ? "Sign Up" : "Sign In"}
                                     </Button>

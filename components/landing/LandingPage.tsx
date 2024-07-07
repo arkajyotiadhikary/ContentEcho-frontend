@@ -1,7 +1,7 @@
 import React from "react";
 import LandingHeader from "./LandingHeader";
 import LandingFooter from "./LandingFooter";
-import { Box, Button, Heading, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, VStack, Text } from "@chakra-ui/react";
 import bgImage from "../../public/landing-img.png";
 
 const LandingPage = () => {
@@ -31,11 +31,13 @@ const LandingPage = () => {
                         ml={8}
                   >
                         <VStack spacing={20} align="flex-start">
-                              <Heading as="h1" size="2xl" fontWeight="bold">
+                              <h1 className="text-6xl">
                                     Inspiring Stories
-                                    <br /> & <br />
+                                    <br />
+                                    &
+                                    <br />
                                     Ideas
-                              </Heading>
+                              </h1>
                               <Text fontSize="lg" width={"60%"}>
                                     Dive into a world of inspiring stories and groundbreaking ideas
                                     that will change your perspective.

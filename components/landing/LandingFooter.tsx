@@ -10,7 +10,7 @@ const LandingFooter = () => (
             backgroundColor={"rgba(0, 0, 0, 0)"}
             color="#213951"
       >
-            <Text>Made with ❤️ and for internship for PearlThoughts 🌟</Text>
+            <Text>Made with ❤️ for an internship at PearlThoughts 🌟</Text>
       </Box>
 );
 

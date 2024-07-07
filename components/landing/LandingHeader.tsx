@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { Box, Flex, Button } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+
 const LandingHeader = () => {
       return (
             <Box
-                  bgGradient={`linear(to-t, transparent, white)`}
+                  bgGradient="linear(to-t, transparent, white)"
                   py={2}
-                  backgroundColor={"rgba(0, 0, 0, 0)"}
+                  backgroundColor="rgba(0, 0, 0, 0)"
             >
                   <Flex className="container mx-auto" justify="space-between" align="center" px={6}>
                         <Link href="/" passHref>
@@ -16,7 +17,15 @@ const LandingHeader = () => {
                         </Link>
 
                         <Flex align="center">
-                              <Link href="/" passHref>
+                              <Link
+                                    href={{
+                                          pathname: "/auth",
+                                          query: {
+                                                isSignIn: true,
+                                          },
+                                    }}
+                                    passHref
+                              >
                                     <Box
                                           as="a"
                                           fontSize="sm"
@@ -27,15 +36,27 @@ const LandingHeader = () => {
                                           Sign in
                                     </Box>
                               </Link>
-                              <Button
-                                    color={"white"}
-                                    bgColor={"#5a7483"}
-                                    variant="solid"
-                                    rounded={"full"}
-                                    size={"sm"}
+                              <Link
+                                    href={{
+                                          pathname: "/auth",
+                                          query: {
+                                                isSignIn: false,
+                                          },
+                                    }}
+                                    passHref
                               >
-                                    Get Started
-                              </Button>
+                                    <Box
+                                          as="a"
+                                          bgColor="#f6828c"
+                                          color="white"
+                                          px={4}
+                                          py={2}
+                                          rounded="lg"
+                                          _hover={{ bg: "#213951" }}
+                                    >
+                                          Get Started
+                                    </Box>
+                              </Link>
                         </Flex>
                   </Flex>
             </Box>

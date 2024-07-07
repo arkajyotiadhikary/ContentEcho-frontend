@@ -15,15 +15,15 @@ import { faMagnifyingGlass, faAdd, faBell } from "@fortawesome/free-solid-svg-ic
 
 const Header = () => {
       return (
-            <Box bg="white" shadow="md" py={2}>
+            <Box bg="white" backgroundColor={"rgba(0, 0, 0, 0)"} py={2}>
                   <Flex className="container mx-auto" justify="space-between" align="center" px={6}>
                         <Link href="/" passHref>
                               <Box as="a" fontSize="2xl" fontWeight="bold" color="gray.800">
                                     ContentEcho
                               </Box>
                         </Link>
-                        <Flex align="center" flex="1" mx={6}>
-                              <InputGroup flex="1" mx={6}>
+                        <Box flex="1">
+                              <InputGroup flex="1" mx={6} width={"50%"}>
                                     <Input placeholder="Search..." />
                                     <InputRightElement>
                                           <FontAwesomeIcon
@@ -32,7 +32,7 @@ const Header = () => {
                                           />
                                     </InputRightElement>
                               </InputGroup>
-                        </Flex>
+                        </Box>
                         <Flex align="center space-x-2">
                               <Button mr={7}>
                                     <FontAwesomeIcon className=" h-4" icon={faAdd} />
