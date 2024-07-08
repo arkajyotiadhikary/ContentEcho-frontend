@@ -8,7 +8,6 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(405).end();
       }
       const { identifier, password } = req.body;
-
       try {
             const strapiRes = await strapiApiClient.post("/auth/local", {
                   identifier,

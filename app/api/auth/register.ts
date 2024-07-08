@@ -8,6 +8,11 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(405).end();
       }
       const { username, email, password } = req.body;
+      console.log({
+            username,
+            email,
+            password,
+      });
 
       try {
             const strapiRes = await strapiApiClient.post("/auth/local", {

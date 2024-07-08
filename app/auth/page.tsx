@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect, use } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { registerUser, authenticateUser } from "@/tools/api";
+import { authService } from "@/services/authServices";
 import cookie from "cookie";
 
 // todo move this to another component
@@ -52,7 +52,7 @@ const Auth = () => {
       const router = useRouter();
 
       useEffect(() => {
-            const isSignInParam = searchParams.get("isSignIn");
+            const isSignInParam = searchParams?.get("isSignIn") || false;
             if (isSignInParam !== null) {
                   setIsSignIn(isSignInParam === "true");
             }
@@ -65,12 +65,8 @@ const Auth = () => {
             e.preventDefault();
 
             const response = isSignIn
-                  ? await authenticateUser({ identifier: user.email, password: user.password })
-                  : await registerUser({
-                          username: user.username,
-                          email: user.email,
-                          password: user.password,
-                    });
+                  ? await authService.login(user.email, user.password)
+                  : await authService.register(user.email, user.username, user.password);
 
             console.log(response);
 
